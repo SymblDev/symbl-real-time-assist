@@ -1,6 +1,6 @@
-# Answering Machine Detection Demo
+# Real-time Assist Demo
 
-This React App works with Symbl's APIs to detect `Answering Machine` in realtime over a PSTN call.
+This React App works with Symbl's APIs to showcase an example of real-time assist experience in realtime over a Dual Channel Phone call.
 
 ## Configurations
 

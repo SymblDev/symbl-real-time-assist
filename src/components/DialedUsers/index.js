@@ -27,6 +27,7 @@ import {green, deepOrange, red, amber, lightGreen, blue} from '@material-ui/core
 
 import Box from "@material-ui/core/Box";
 import {LiveCaptionText} from "../LiveTranscript";
+import * as PropTypes from "prop-types";
 
 
 const UserCardHeader = ({user}) => {
@@ -58,14 +59,14 @@ const UserCardHeader = ({user}) => {
 const TrackerProgress = withStyles((theme) => ({
     root: {
         height: 3,
-            borderRadius: 3,
+        borderRadius: 3,
     },
     colorPrimary: {
         backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
     },
     bar: {
         borderRadius: 3,
-            backgroundColor: '#1a90ff',
+        backgroundColor: '#1a90ff',
     }
 }))(LinearProgress);
 
@@ -81,22 +82,24 @@ const UserCard = ({user}) => {
             <UserCardHeader user={user}/>
             <CardContent style={{paddingTop: 0}}>
 
-                {user.name === 'Agent' ? (<div><Typography variant={"caption"} style={{fontSize: '0.2em'}}>Politeness</Typography>
-                    <TrackerProgress
-                    variant={"determinate"}
-                    value={Math.ceil((politenessCount / 20) * 100)}
-                />
-                    <Typography variant={"caption"} style={{fontSize: '0.2em'}}>Empathy</Typography>
-                    <TrackerProgress
-                        variant={"determinate"}
-                        value={Math.ceil((empathyCount / 10) * 100)}
-                    />
-                </div>) : (<div><Typography variant={"caption"} style={{fontSize: '0.2em'}}>Satisfaction</Typography>
-                    <TrackerProgress
-                        variant={"determinate"}
-                        value={Math.ceil((satisfactionCount / 10) * 100)}
-                    />
-                </div>)}
+                {user.name === 'Agent' ? (
+                    <div><Typography variant={"caption"} style={{fontSize: '0.2em'}}>Politeness</Typography>
+                        <TrackerProgress
+                            variant={"determinate"}
+                            value={Math.min((politenessCount / 20) * 100, 100)}
+                        />
+                        <Typography variant={"caption"} style={{fontSize: '0.2em'}}>Empathy</Typography>
+                        <TrackerProgress
+                            variant={"determinate"}
+                            value={Math.min((empathyCount / 10) * 100, 100)}
+                        />
+                    </div>) : (
+                    <div><Typography variant={"caption"} style={{fontSize: '0.2em'}}>Satisfaction</Typography>
+                        <TrackerProgress
+                            variant={"determinate"}
+                            value={Math.min((satisfactionCount / 10) * 100, 100)}
+                        />
+                    </div>)}
             </CardContent>
         </Card>);
 };
@@ -138,20 +141,65 @@ const LiveTopics = ({topics = []}) => {
     const topicChips = topics.map(topic => {
         const {icon, color} = getSentimentIconAndColorByScore(topic.sentiment)
         return (<Chip variant="default"
-              size="small"
-              label={(<Typography style={{fontWeight: 400}}> {topic.text}</Typography>)}
-              icon={icon}
-              style={{
-                  backgroundColor: color
-              }}
-        />)});
+                      size="small"
+                      label={(<Typography style={{fontWeight: 400}}> {topic.text}</Typography>)}
+                      icon={icon}
+                      style={{
+                          backgroundColor: color
+                      }}
+        />)
+    });
     return (<Box>
         {topicChips}
     </Box>);
 };
 
+const getWPMColor = (wpm) => {
+    if (wpm >= 190 || wpm < 80) {
+        return red[800];
+    }  else if (wpm >= 160 || wpm < 110) {
+        return amber[800];
+    } else if (wpm >= 110 && wpm < 160) {
+        return green[800];
+    }
+}
+
+function UserAnalytics({wpm, talkTimePercentage}) {
+    return (
+        <Grid container direction={"row"} spacing={1}>
+            {
+                wpm && (<Grid item xs={2}>
+                    <Grid container direction={"column"}>
+                        <Grid item>
+                            <Typography variant={"caption"} >Pace (WPM)</Typography>
+                        </Grid>
+                        <Grid item style={{justifyItems: 'center'}}>
+                            <Container><Typography variant={"h5"} style={{color: getWPMColor(wpm)}}>{wpm}</Typography></Container>
+                        </Grid>
+                    </Grid>
+                </Grid>)
+            }
+            {
+                talkTimePercentage && <Grid item xs={2}>
+                    <Grid container direction={"column"} spacing={1}>
+                        <Grid item>
+                            <Typography variant={"caption"}>Talk Time (%)</Typography>
+                        </Grid>
+                        <Grid item style={{justifyItems: 'center'}}>
+                            <TrackerProgress
+                                variant={"determinate"}
+                                value={talkTimePercentage}
+                            />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            }
+        </Grid>
+    );
+}
+
 const UserWithLiveCaptions = ({user}) => {
-    const {caption, topics} = user;
+    const {caption, topics, wpm, talkTimePercentage} = user;
     const text = caption ? caption.text : '';
     return (
         <Grid item key={user.phoneNumber}>
@@ -162,6 +210,7 @@ const UserWithLiveCaptions = ({user}) => {
                 <Grid item sm={10}>
                     <LiveTopics topics={topics}/>
                     <LiveCaption text={text}/>
+                    <UserAnalytics wpm={wpm} talkTimePercentage={talkTimePercentage}/>
                 </Grid>
             </Grid>
 

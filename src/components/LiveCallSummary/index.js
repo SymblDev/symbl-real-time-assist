@@ -28,7 +28,14 @@ const trackerColors = {
     'Issue Resolved': LOW_SEVERITY
 };
 
-const allowedTrackers = ['Billing Issue', 'Payment Missing', 'Plan Upgrade', 'CreditCard Added', 'Issue Resolved']
+const allowedTrackers = ['Billing Issue',
+    'Payment Missing',
+    'Plan Upgrade',
+    'CreditCard Added',
+    'Issue Resolved',
+    'Offered Refund',
+    'Product Experience Issue'
+]
 
 const BootstrapInput = withStyles((theme) => ({
     root: {
@@ -47,10 +54,11 @@ const BootstrapInput = withStyles((theme) => ({
         transition: theme.transitions.create(['border-color', 'box-shadow']),
         // Use the system font instead of the default Roboto font.
         fontFamily: [
+            'Poppins',
+            'Roboto',
             '-apple-system',
             'BlinkMacSystemFont',
             '"Segoe UI"',
-            'Roboto',
             '"Helvetica Neue"',
             'Arial',
             'sans-serif',
@@ -109,7 +117,6 @@ const getEntityLabel = (entity = {}) => {
 };
 
 
-
 const LiveCallSummary = ({entities = [], trackers = [], classes}) => {
     const [reason, setReason] = React.useState('');
 
@@ -123,6 +130,11 @@ const LiveCallSummary = ({entities = [], trackers = [], classes}) => {
         }
     }
 
+    let _trackers = trackers.filter(tracker => allowedTrackers.includes(tracker.name));
+    _trackers = _trackers.filter((tracker, index) => _trackers.map(t => t.name).indexOf(tracker.name) === index)
+
+    let _entities = entities.filter(entity => entity && entity.value && entity.value.value);
+    _entities = _entities.filter((entity, index) => _entities.map(e => e.value.value).indexOf(entity.value.value) === index)
     return (
         <Grid container direction={"column"} spacing={1} style={{maxHeight: '30vh'}}>
             {
@@ -132,7 +144,7 @@ const LiveCallSummary = ({entities = [], trackers = [], classes}) => {
                             <CardContent style={{padding: 5}}>
                                 <Grid container direction={"column"}>
                                     {
-                                        entities
+                                        _entities
                                             .filter(entity => entity && entity.value && entity.value.value)
                                             .map(entity => (getEntityLabel(entity)))
                                     }
@@ -171,34 +183,30 @@ const LiveCallSummary = ({entities = [], trackers = [], classes}) => {
                     </Card>
                 </Grid>
             }
-            {
-                <Grid item>
-                    <Card variant={"outlined"}>
-                        <CardHeader
-                            style={{padding: 7}}
-                            subheader={"Highlights"}
-                        />
-                        <CardContent style={{padding: 5}}>
-                            {
-                                trackers
-                                    .filter(tracker => allowedTrackers.includes(tracker.name))
-                                    .filter((tracker, index) => trackers.map(t => t.name).indexOf(tracker.name) === index)
-                                    .map(tracker => (<Chip variant="default"
-                                                           size="small"
-                                                           key={`${tracker.name}`}
-                                                           label={(<Typography
-                                                               style={{fontWeight: 400}}> {tracker.title}</Typography>)}
-                                                           style={{
-                                                               borderRadius: 5,
-                                                               margin: 2,
-                                                               backgroundColor: getTrackerColor(tracker)
-                                                           }}
-                                    />))
-                            }
-                        </CardContent>
-                    </Card>
-                </Grid>
-            }
+            <Grid item>
+                <Card variant={"outlined"}>
+                    <CardHeader
+                        style={{padding: 7}}
+                        subheader={"Highlights"}
+                    />
+                    <CardContent style={{padding: 5, minHeight: '10vh', maxHeight: '10vh', scrollBehavior: 'auto'}}>
+                        {
+
+                            _trackers.map(tracker => (<Chip variant="default"
+                                                       size="small"
+                                                       key={`${tracker.name}`}
+                                                       label={(<Typography
+                                                           style={{fontWeight: 400}}> {tracker.title}</Typography>)}
+                                                       style={{
+                                                           borderRadius: 5,
+                                                           margin: 2,
+                                                           backgroundColor: getTrackerColor(tracker)
+                                                       }}
+                                />))
+                        }
+                    </CardContent>
+                </Card>
+            </Grid>
         </Grid>
     );
 }

@@ -45,7 +45,17 @@ const getEventIcon = (type) => {
         return (<NotificationsIcon fontSize={"small"}/>)
     }
 }
-const handledTrackers = ['Symbl.Greetings', 'Symbl.Introductions', 'Symbl.Goodbyes', 'Symbl.Excitement', 'Billing Issue', 'CreditCard Added'];
+const handledTrackers = ['Symbl.Greetings',
+    'Symbl.Introductions',
+    'Symbl.Goodbyes',
+    'Symbl.Excitement',
+    'Billing Issue',
+    'CreditCard Added',
+    'Product Experience Issue',
+    'Issue Resolved',
+    'Offered Refund',
+    'Frustration'
+];
 
 const getTrackerDescription = (event) => {
     const currentUserName = event.user && event.user.name || 'Customer';
@@ -62,6 +72,14 @@ const getTrackerDescription = (event) => {
         return `${currentUserName} has billing issue.`;
     } else if (event.name === 'CreditCard Added') {
         return `${currentUserName} has added credit card details.`;
+    } else if (event.name === 'Product Experience Issue') {
+        return `${currentUserName} expressed an issue regarding product experience.`;
+    } else if (event.name === 'Issue Resolved') {
+        return `${currentUserName} indicated that the issue is resolved.`;
+    } else if (event.name === 'Offered Refund') {
+        return `${currentUserName} offered refund.`;
+    } else if (event.name === 'Frustration') {
+        return `${currentUserName} seems frustrated.`;
     }
 }
 
@@ -109,6 +127,12 @@ const getEventLog = (event) => {
             {event.type === 'tracker' && event.name === 'CreditCard Added' ? (<CardContent style={{padding: 3, paddingTop: 0}}>
                 <ActionButton text={"Check Credit Card Status"} />
             </CardContent>) : undefined}
+            {event.type === 'tracker' && event.name === 'Product Experience Issue' ? (<CardContent style={{padding: 3, paddingTop: 0}}>
+                <Typography variant={"h6"} style={{color: 'green'}}>Offer Refund</Typography>
+            </CardContent>) : undefined}
+            {event.type === 'tracker' && event.name === 'Frustration' ? (<CardContent style={{padding: 3, paddingTop: 0}}>
+                <Typography variant={"h6"} style={{color: 'orchid'}}>Show Empathy</Typography>
+            </CardContent>) : undefined}
         </Card>);
     } else {
 
@@ -143,8 +167,8 @@ const getEventLog = (event) => {
 const EventsTimeline = ({events, classes}) => {
     return (
         <Paper variant={"outlined"} className={classes.paper} style={{
-            minHeight: '40vh',
-            maxHeight: '50vh',
+            minHeight: '55vh',
+            maxHeight: '55vh',
             overflow: 'auto'
         }}>
             <Typography variant={"h6"} style={{marginBottom: 15, paddingBottom: 10}}>
@@ -155,7 +179,7 @@ const EventsTimeline = ({events, classes}) => {
                     events
                         .filter(event => event.type && event.title)
                         .filter((event, index) => {
-                            console.log(event, index)
+                            // console.log(event, index)
                             if (index > 0) {
                                 if (event.type === 'tracker' && events[index - 1].type === 'tracker' &&
                                     events[index - 1].user.name === event.user.name &&

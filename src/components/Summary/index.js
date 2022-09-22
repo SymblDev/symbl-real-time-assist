@@ -1,10 +1,7 @@
-import {Button, Card, CardContent, CardMedia, Grid, Paper, Typography} from "@material-ui/core";
+import {Paper, Typography} from "@material-ui/core";
 import React from "react";
 import {withStyles} from "@material-ui/core/styles";
 import styles from "../../globalStyle";
-
-
-
 
 const Summary = ({summary, classes}) => {
     if (summary && summary.length > 0) {

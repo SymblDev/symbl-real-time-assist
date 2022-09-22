@@ -233,6 +233,29 @@ export const getAnalytics = async (conversationId) => {
     });
 }
 
+export const getMessagesWithSentiment = async (conversationId) => {
+    const accessToken = await generateAccessToken();
+    const options = {
+        method: 'get',
+        url: `https://api.symbl.ai/v1/conversations/${conversationId}/messages?sentiment=true`,
+        json: true,
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    };
+    return new Promise((resolve, reject) => {
+        request(options, (err, res, body) => {
+            if (err) {
+                console.error('error while fetching analytics: ', err);
+                reject(err);
+            }
+            const {messages} = body;
+            console.log("messages", messages);
+            resolve(messages);
+        });
+    });
+}
+
 export const getSummary = async (conversationId) => {
     const accessToken = await generateAccessToken();
     const options = {

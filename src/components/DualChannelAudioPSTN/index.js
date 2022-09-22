@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
-import {getSummary, subscribeToConnection} from '../../utils/symbl-utils';
+import {getAnalytics, getMessagesWithSentiment, getSummary, subscribeToConnection} from '../../utils/symbl-utils';
 import moment from 'moment';
 import EventsTimeline from "../EventsTimeline";
 import Transcript from "../Transcript";
@@ -12,6 +12,7 @@ import {statsTrackers} from "../../config";
 import Summary from "../Summary";
 import {uuid} from "uuidv4";
 import LiveCallSummary from "../LiveCallSummary";
+import SentimentChart from "../SentimentChart";
 
 
 class DualChannelAudioPSTN extends React.Component {
@@ -28,17 +29,17 @@ class DualChannelAudioPSTN extends React.Component {
             startedTimestamp: undefined,
             // events: [],
             events: [
-            //     {
-            //     id: '123',
-            //     type: 'tracker',
-            //     name: 'Billing Issue',
-            //     // user: {
-            //     //     name:
-            //     // },
-            //     title: 'Billing Issue',
-            //     timestamp: '10:22 pm',
-            //     description: 'Call connected to Agent.'
-            // }
+                //     {
+                //     id: '123',
+                //     type: 'tracker',
+                //     name: 'Billing Issue',
+                //     // user: {
+                //     //     name:
+                //     // },
+                //     title: 'Billing Issue',
+                //     timestamp: '10:22 pm',
+                //     description: 'Call connected to Agent.'
+                // }
             ],
             captions: [],
             summary: [
@@ -48,91 +49,81 @@ class DualChannelAudioPSTN extends React.Component {
                 // }
             ],
             entities: [
-            //     {
-            //     type: 'PHONE_NUMBER',
-            //     text: '4 08, 5 5 5, 394 4',
-            //     value: {
-            //         value: '4 08, 5 5 5, 394 4'
-            //     }
-            // }
+                //     {
+                //     type: 'PHONE_NUMBER',
+                //     text: '4 08, 5 5 5, 394 4',
+                //     value: {
+                //         value: '4 08, 5 5 5, 394 4'
+                //     }
+                // }
             ],
             trackers: [
-            //     {
-            //     name: 'Billing Issue',
-            //     title: 'Billing Issue'
-            // }, {
-            //     name: 'Payment Missing',
-            //     title: 'Payment Missing'
-            // }, {
-            //     name: 'Plan Upgrade',
-            //     title: 'Plan Upgrade'
-            // },
-            //     {
-            //         name: 'Issue Resolved',
-            //         title: 'Issue Resolved'
-            //     }
+                //     {
+                //     name: 'Billing Issue',
+                //     title: 'Billing Issue'
+                // }, {
+                //     name: 'Payment Missing',
+                //     title: 'Payment Missing'
+                // }, {
+                //     name: 'Plan Upgrade',
+                //     title: 'Plan Upgrade'
+                // },
+                //     {
+                //         name: 'Issue Resolved',
+                //         title: 'Issue Resolved'
+                //     }
             ],
             // messages: [],
-            messages: [{
-                id: '1231',
-                from: {
-                    name: 'Agent'
-                },
-                payload: {
-                    content: "Hey there!"
-                },
-                duration: {
-                    startTime: "2022-09-12T08:15:50.549Z"
-                },
-                timeOffsetStr: "00:01"
-            }, {
-                id: '1232',
-                from: {
-                    name: 'Customer'
-                },
-                payload: {
-                    content: "Hi."
-                },
-                duration: {
-                    startTime: "2022-09-12T08:17:50.549Z"
-                },
-                timeOffsetStr: "00:01"
-            }],
-            users:
-                [{
-                    name: 'Agent',
-                    phoneNumber: '+19517725054',
-                    caption: {
-                        text: ''
-                    },
-                    // politeness: 47,
-                    politenessCount: 0,
-                    empathyCount: 0,
-                    // topics: [{
-                    //     text: 'Very negative',
-                    //     sentiment: -0.9
-                    // }, {
-                    //     text: 'Negative',
-                    //     sentiment: -0.3
-                    // }, {
-                    //     text: 'Very positive',
-                    //     sentiment: 0.9
-                    // }, {
-                    //     text: 'Positive',
-                    //     sentiment: 0.4
-                    // }, {
-                    //     text: 'Neutral',
-                    //     sentiment: 0.1
-                    // }
-                    // ]
-                }, {
-                    name: 'Customer',
-                    phoneNumber: '+14081555354',
-                    caption: {
-                        text: ''
-                    },
-                    satisfactionCount: 0
-                }],
+            messagesWithSentiment: [],
+                // [{"id":"4967068617670656","text":"Hello.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:09:40.199Z","endTime":"2022-09-21T07:09:40.699Z","timeOffset":4.2,"duration":0.5,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.246},"suggested":"neutral"}},{"id":"4776211176226816","text":"Hey, how's it going?","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:09:44.799Z","endTime":"2022-09-21T07:09:45.999Z","timeOffset":8.8,"duration":1.2,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.017},"suggested":"neutral"}},{"id":"4686282312122368","text":"How's it going?","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:11:47.532Z","endTime":"2022-09-21T07:11:48.433Z","timeOffset":131.53,"duration":0.9,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":0.051},"suggested":"neutral"}},{"id":"4807536184655872","text":"Cool.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:11:50.233Z","endTime":"2022-09-21T07:11:50.733Z","timeOffset":134.23,"duration":0.5,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":0.81},"suggested":"positive"}},{"id":"6513622855974912","text":"Looks like we are on the right track.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:11:50.733Z","endTime":"2022-09-21T07:11:53.032Z","timeOffset":134.73,"duration":2.3,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":0.968},"suggested":"positive"}},{"id":"6407901137076224","text":"How may I assist you today?","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:11:53.032Z","endTime":"2022-09-21T07:11:54.433Z","timeOffset":137.03,"duration":1.4,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":0.039},"suggested":"neutral"}},{"id":"6272116509376512","text":"I completely understand your frustration, but unfortunately, I need to make sure that we are following or compliances.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:12:00.133Z","endTime":"2022-09-21T07:12:10.033Z","timeOffset":144.13,"duration":9.9,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.263},"suggested":"neutral"}},{"id":"5937963825889280","text":"Yeah, I have a major billing issue today.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:12:22.033Z","endTime":"2022-09-21T07:12:27.033Z","timeOffset":166.03,"duration":5,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.886},"suggested":"negative"}},{"id":"5554277217468416","text":"I just cannot see my bill, and I am so frustrated that I cannot even open my billing page.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:12:27.933Z","endTime":"2022-09-21T07:12:38.433Z","timeOffset":171.93,"duration":10.5,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-1},"suggested":"negative"}},{"id":"5321537435992064","text":"Yeah, I don't know what can you do, really?","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:12:42.133Z","endTime":"2022-09-21T07:12:44.833Z","timeOffset":186.13,"duration":2.7,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.437},"suggested":"negative"}},{"id":"4925522526601216","text":"But I would like to see should be fixed.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:12:44.833Z","endTime":"2022-09-21T07:12:48.933Z","timeOffset":188.83,"duration":4.1,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.021},"suggested":"neutral"}},{"id":"5229858020392960","text":"Sure.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:12:55.733Z","endTime":"2022-09-21T07:12:56.233Z","timeOffset":199.73,"duration":0.5,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.3},"suggested":"neutral"}},{"id":"5143908544151552","text":"Are you sure you want to cancel your membership?","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:12:56.333Z","endTime":"2022-09-21T07:13:00.333Z","timeOffset":200.33,"duration":4,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.121},"suggested":"neutral"}},{"id":"4953303314595840","text":"Okay.","from":{"id":"6cd92722-8c95-4429-95fb-eb0669318a8c","name":"Agent"},"startTime":"2022-09-21T07:13:08.633Z","endTime":"2022-09-21T07:13:09.233Z","timeOffset":212.63,"duration":0.6,"conversationId":"6739856802185216","phrases":[],"sentiment":{"polarity":{"score":-0.17},"suggested":"neutral"}}],
+            messages: [
+            //     {
+            //     id: '1231',
+            //     from: {
+            //         name: 'Agent'
+            //     },
+            //     payload: {
+            //         content: "Hey there!"
+            //     },
+            //     duration: {
+            //         startTime: "2022-09-12T08:15:50.549Z"
+            //     },
+            //     timeOffsetStr: "00:01"
+            // }, {
+            //     id: '1232',
+            //     from: {
+            //         name: 'Customer'
+            //     },
+            //     payload: {
+            //         content: "Hi."
+            //     },
+            //     duration: {
+            //         startTime: "2022-09-12T08:17:50.549Z"
+            //     },
+            //     timeOffsetStr: "00:01"
+            // }
+            ],
+            users: [
+                // {
+                //     name: 'Agent',
+                //     phoneNumber: '+19517725054',
+                //     caption: {
+                //         text: ''
+                //     },
+                //     // politeness: 47,
+                //     politenessCount: 0,
+                //     empathyCount: 0,
+                //     wpm: 145,
+                //     talkTimePercentage: 45.36
+                // }, {
+                //     name: 'Customer',
+                //     phoneNumber: '+14081555354',
+                //     caption: {
+                //         text: ''
+                //     },
+                //     satisfactionCount: 0
+                // }
+                ],
             scores: {
                 answering_machine: [],
                 do_not_call: [],
@@ -156,6 +147,7 @@ class DualChannelAudioPSTN extends React.Component {
 
         this.getUserByMessageId = this.getUserByMessageId.bind(this);
         this.getUserByPhoneNumber = this.getUserByPhoneNumber.bind(this);
+        this.getUserByName = this.getUserByName.bind(this);
     }
 
     async componentDidMount() {
@@ -268,6 +260,15 @@ class DualChannelAudioPSTN extends React.Component {
         return undefined;
     }
 
+    getUserByName = (name) => {
+        const users = this.state.users.filter(user => user.name === name);
+
+        if (users.length > 0) {
+            return users[0];
+        }
+        return undefined;
+    }
+
     getUserByMessageId = (messageId) => {
         const messages = this.state.messages.filter(message => message.id === messageId);
 
@@ -302,12 +303,12 @@ class DualChannelAudioPSTN extends React.Component {
     getTopicsByUser = (topics = [], name) => {
         if (name) {
             const agentMessageIds = this.state.messages.filter(m => m.from.name === name).map(m => m.id);
-            console.log('Topics', this.state.messages.filter(m => m.from.name === name).map(m => m.from.name + ' ' + m.payload.content))
-            console.log('Topics', agentMessageIds);
-            console.log('Topics', topics
-                .map(topic => topic.messageReferences));
-            console.log('Topics', topics
-                .filter(topic => topic.messageReferences.filter(ref => agentMessageIds.includes(ref.id)).length > 0));
+            // console.log('Topics', this.state.messages.filter(m => m.from.name === name).map(m => m.from.name + ' ' + m.payload.content))
+            // console.log('Topics', agentMessageIds);
+            // console.log('Topics', topics
+            //     .map(topic => topic.messageReferences));
+            // console.log('Topics', topics
+            //     .filter(topic => topic.messageReferences.filter(ref => agentMessageIds.includes(ref.id)).length > 0));
             const t = topics
                 .filter(topic => topic.messageReferences.filter(ref => agentMessageIds.includes(ref.id)).length > 0)
                 .map(topic => {
@@ -359,11 +360,6 @@ class DualChannelAudioPSTN extends React.Component {
             let {messages: _messages} = data;
             if (_messages && _messages.length > 0) {
                 _messages = _messages.map(m => {
-                    // const timeOffsetInMillis = this.state.startedTimestamp.diff(moment(m.startTime), 'milliseconds');
-                    // const d = moment.duration(timeOffsetInMillis, 'milliseconds');
-                    // const hours = Math.floor(d.asHours());
-                    // const mins = Math.floor(d.asMinutes()) - hours * 60;
-                    // const secs = Math.floor(d.asSeconds()) - (hours * 60) - (mins * 60)
                     return {
                         ...m,
                         timeOffsetStr: moment(m.startTime).format('hh:mm')
@@ -423,6 +419,23 @@ class DualChannelAudioPSTN extends React.Component {
                 // console.log(this.state.messages)
                 // console.log(this.state.entities)
 
+            }
+            const messagesWithSentiment = await getMessagesWithSentiment(this.state.conversationId);
+            this.setState({
+                messagesWithSentiment
+            });
+            const analytics = await getAnalytics(this.state.conversationId);
+            if (analytics.members && analytics.members.length > 0) {
+                analytics.members.forEach(m => {
+                    const user = this.getUserByName(m.name);
+                    if (user) {
+                        user.wpm = m.pace.wpm;
+                        user.talkTimePercentage = m.talkTime.percentage;
+                    }
+                });
+                this.setState({
+                    users: this.state.users
+                });
             }
         } else if (type === 'tracker_response') {
             const {trackers, isFinal, sequenceNumber} = data;
@@ -568,6 +581,7 @@ class DualChannelAudioPSTN extends React.Component {
                         </Grid>
                     </Grid>
                 </Grid>
+
                 {/*<Typography component="div" style={{ backgroundColor: '#cfe8fc', height: '100vh' }} />*/}
                 {/*<Grid container direction={"row"}>*/}
                 {/*    <LiveTranscript captions={this.state.captions}/>*/}
@@ -587,7 +601,14 @@ class DualChannelAudioPSTN extends React.Component {
                             <EventsTimeline events={this.state.events}/>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Transcript messages={this.state.messages}/>
+                            <Grid container direction={"column"} spacing={1}>
+                                <Grid item>
+                                    <SentimentChart messages={this.state.messagesWithSentiment}/>
+                                </Grid>
+                                <Grid item>
+                                    <Transcript messages={this.state.messages}/>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>

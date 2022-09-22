@@ -19,8 +19,8 @@ const Transcript = ({messages, classes}) => {
     return (
         <ThemeProvider theme={theme}>
             <Paper variant={"outlined"} className={classes.paper} style={{
-                minHeight: '40vh',
-                maxHeight: '50vh',
+                minHeight: '26vh',
+                maxHeight: '26vh',
                 overflow: 'auto'
             }}>
                 <Typography variant={"h6"} style={{marginBottom: 15, paddingBottom: 10}}>
