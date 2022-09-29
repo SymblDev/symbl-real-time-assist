@@ -9,8 +9,6 @@ import HomePage from "./pages/HomePage";
 import ConfigPage from "./pages/ConfigPage";
 import NoPage from "./pages/NoPage";
 
-// import App from './App';
-
 function App() {
   return (
     <BrowserRouter>
