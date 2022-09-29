@@ -1,6 +1,6 @@
 # Real-time Assist Demo
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/symblai/real-time-assist)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/SymblDev/symbl-real-time-assist)
 
 This React App works with Symbl's APIs to showcase an example of real-time assist experience in realtime over a Dual Channel Phone call.
 
