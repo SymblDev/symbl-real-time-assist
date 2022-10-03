@@ -4,7 +4,7 @@
  * File Created: Monday, 3rd October 2022 1:01:26 pm
  * Author: Subodh Jena (jenasubodh@gmail.com)
  * -----
- * Last Modified: Monday, 3rd October 2022 7:24:37 pm
+ * Last Modified: Monday, 3rd October 2022 7:43:24 pm
  * Modified By: Subodh Jena (jenasubodh@gmail.com>)
  * -----
  * Copyright 2019 - 2022 symbl.ai, Symbl
@@ -12,6 +12,7 @@
 
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 
 export default function ConfigPage(props) {
   const classes = useStyles();
@@ -20,12 +21,20 @@ export default function ConfigPage(props) {
     <>
       <div className={classes.container}>
         <p className={classes.title}>Symbl</p>
-        <div className={classes.containerBody}></div>
+        <form className={classes.containerBody} noValidate>
+          <TextField id="standard-basic" label="URL" variant="outlined" />
+          <span className={classes.separator}></span>
+          <TextField id="standard-basic" label="AppId" variant="outlined" />
+          <span className={classes.separator}></span>
+          <TextField id="standard-basic" label="AppSecret" variant="outlined" />
+        </form>
       </div>
 
       <div className={classes.container}>
-        <p className={classes.title}>Twilio</p>
-        <div className={classes.containerBody}></div>
+        <p className={classes.title}>Twilio Bridge</p>
+        <form className={classes.containerBody} noValidate>
+          <TextField id="standard-basic" label="URL" variant="outlined" />
+        </form>
       </div>
 
       <div className={classes.container}>
@@ -47,7 +56,10 @@ const useStyles = makeStyles({
   },
   title: {},
   containerBody: {
-    height: 30,
-    backgroundColor: "red",
+    display: "flex",
+    flexDirection: "column",
+  },
+  separator: {
+    height: 10,
   },
 });
