@@ -4,7 +4,7 @@
  * File Created: Monday, 3rd October 2022 1:01:26 pm
  * Author: Subodh Jena (jenasubodh@gmail.com)
  * -----
- * Last Modified: Monday, 3rd October 2022 7:54:48 pm
+ * Last Modified: Monday, 3rd October 2022 8:00:03 pm
  * Modified By: Subodh Jena (jenasubodh@gmail.com>)
  * -----
  * Copyright 2019 - 2022 symbl.ai, Symbl
@@ -23,13 +23,13 @@ export default function ConfigPage(props) {
         <div className={classes.container}>
           <p className={classes.title}>Symbl</p>
           <form className={classes.containerBody} noValidate>
-            <TextField id="standard-basic" label="URL" variant="outlined" />
+            <TextField id="symbl_url" label="URL" variant="outlined" />
             <span className={classes.separator}></span>
-            <TextField id="standard-basic" label="AppId" variant="outlined" />
+            <TextField id="symbl_app_id" label="App Id" variant="outlined" />
             <span className={classes.separator}></span>
             <TextField
-              id="standard-basic"
-              label="AppSecret"
+              id="symbl_app_sectet"
+              label="App Secret"
               variant="outlined"
             />
           </form>
@@ -38,7 +38,7 @@ export default function ConfigPage(props) {
         <div className={classes.container}>
           <p className={classes.title}>Twilio Bridge</p>
           <form className={classes.containerBody} noValidate>
-            <TextField id="standard-basic" label="URL" variant="outlined" />
+            <TextField id="twilio_bridge_url" label="URL" variant="outlined" />
           </form>
         </div>
       </div>
