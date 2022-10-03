@@ -8,7 +8,7 @@ export const summaryEmails = process.env.REACT_APP_SUMMARY_EMAIL_LIST
   ? process.env.REACT_APP_SUMMARY_EMAIL_LIST.replace(/\s/g, "").split(",")
   : [];
 export const twilioBridgeSubscriptionUrl =
-  "wss://8ee9-122-172-87-54.in.ngrok.io/symbl/updates";
+  "wss://5953-122-172-87-54.in.ngrok.io/symbl/updates";
 
 export const intents = [
   { intent: "answering_machine" },
