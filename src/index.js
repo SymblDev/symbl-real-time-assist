@@ -7,12 +7,16 @@ import theme from "./Theme";
 import Layout from "./pages/Layout";
 import { Appbar } from "./components/Appbar";
 import MainContainer from "./components/MainContainer";
+import { AuthProvider } from "./contexts/AuthProvider";
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Appbar />
-      <MainContainer />
+      <AuthProvider>
+        {/* <Appbar />
+      <MainContainer /> */}
+        <Layout />
+      </AuthProvider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
